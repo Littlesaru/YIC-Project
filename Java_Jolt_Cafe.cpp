@@ -285,7 +285,6 @@ int main()
                     {
                         cout << "Updating data for Full-Time Employee ID: " << num << endl;
                         Fulltime_Employees[i].setFullTimeData();
-                        // Recalculate salary after updating
                         Fulltime_Employees[i].calculateFulltimeTotalSalary();
                         Fulltime_Employees[i].calculateFulltimeTotalNetSalary();
                         found = true;
@@ -307,7 +306,6 @@ int main()
                     {
                         cout << "Updating data for Part-Time Employee ID: " << num << endl;
                         PartTime_Employees[i].setParttimeData();
-                        // Recalculate salary after updating
                         PartTime_Employees[i].calculateParttimeTotalNetSalary();
                         found = true;
                         break;
