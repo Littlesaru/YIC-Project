@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <vector>
 using namespace std;
 
@@ -80,12 +81,13 @@ public:
 
     void getData()
     {
-        cout << "ID : " << employee_ID << endl;
-        cout << "Name : " << employee_name << endl;
-        cout << "Position : " << employee_position << endl;
-        cout << "Type : " << employee_type << endl;
-        cout << "Start Date : " << start_date << endl;
-        cout << "Basic Salary : " << basic_salary << endl;
+        // Set width and alignment for the table
+        cout << left << setw(20) << "ID" << ": " << setw(20) << employee_ID << endl;
+        cout << left << setw(20) << "Name" << ": " << setw(20) << employee_name << endl;
+        cout << left << setw(20) << "Position" << ": " << setw(20) << employee_position << endl;
+        cout << left << setw(20) << "Type" << ": " << setw(20) << employee_type << endl;
+        cout << left << setw(20) << "Start Date" << ": " << setw(20) << start_date << endl;
+        cout << left << setw(20) << "Basic Salary" << ": " << setw(20) << fixed << setprecision(2) << basic_salary << endl;
     }
 };
 
@@ -161,10 +163,10 @@ public:
 
     void getFullTimeData()
     {
-        getData(); // Get common data from Employee
-        cout << "Leave Days: " << leave_days << endl;
-        cout << "Overtime Hours: " << overtime_hours << endl;
-        cout << "Total Net Amount: " << calculateFulltimeTotalNetSalary() << endl;
+        getData();
+        cout << left << setw(20) << "Leave Days" << ": " << setw(20) << leave_days << endl;
+        cout << left << setw(20) << "Overtime Hours" << ": " << setw(20) << overtime_hours << endl;
+        cout << left << setw(20) << "Total Net Amount" << ": " << setw(20) << fixed << setprecision(2) << calculateFulltimeTotalNetSalary() << endl;
         cout << endl;
     }
 };
@@ -202,9 +204,9 @@ public:
 
     void getParttimeData()
     {
-        getData(); // Get common data from Employee
-        cout << "Working Hours: " << working_hours << endl;
-        cout << "Total Net Amount: " << calculateParttimeTotalNetSalary() << endl;
+        getData();
+        cout << left << setw(20) << "Working Hours" << ": " << setw(20) << working_hours << endl;
+        cout << left << setw(20) << "Total Net Amount" << ": " << setw(20) << fixed << setprecision(2) << calculateParttimeTotalNetSalary() << endl;
         cout << endl;
     }
 };
@@ -219,7 +221,7 @@ int main()
     cout << "*---___ Java_Jolt_Cafe Manager __---*" << endl;
     cout << "--------------------------------------------" << endl;
 
-    while (true)
+    while (opt!=6)
     {
         cout << "\nMenu" << endl;
         cout << "1. Insert Employee Data \n"
@@ -251,12 +253,14 @@ int main()
                 {
                     FullTime New_Employee;
                     New_Employee.setFullTimeData();
+                    cout<<endl;
                     Fulltime_Employees.push_back(New_Employee);
                 }
                 else if (employee_type == "parttime")
                 {
                     PartTime New_Employee;
                     New_Employee.setParttimeData();
+                    cout<<endl;
                     PartTime_Employees.push_back(New_Employee);
                 }
                 else
@@ -266,7 +270,7 @@ int main()
             }
             break;
         }
-         case 2:
+        case 2:
         {
             int num;
             string type;
