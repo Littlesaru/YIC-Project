@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
 // Global variable
@@ -29,55 +30,65 @@ public:
     Employee() : employee_ID(0), employee_name(""), employee_position(""), employee_type(""), start_date(""), basic_salary(0) {}
 
     // Set employee data
-    void setData()
+void setData()
+{
+    cout << "Enter Employee ID: ";
+    cin >> employee_ID;
+    cin.ignore(); // Clear input buffer
+    cout << "Enter Employee Name: ";
+    getline(cin, employee_name);
+
+    // Loop until a valid employee position is entered
+    while (true)
     {
-        cout << "Enter Employee ID: ";
-        cin >> employee_ID;
-        cin.ignore(); // Clear input buffer
-        cout << "Enter Employee Name: ";
-        getline(cin, employee_name);
         cout << "Enter Employee Position (Fulltime- Barista, Cashier, Supervisor (or) Part-time- Cleaner, Kitchen Staff, Waiter, Waitress): ";
         getline(cin, employee_position);
-        cout << "Enter Employee Start Date (dd/mm/yy): ";
-        cin >> start_date;
 
-        // Set basic salary based on position
-        if (employee_position == "Barista")
+        if (employee_position == "Barista"||employee_position =="barista")
         {
             basic_salary = 1920;
             employee_type = "fulltime";
+            break;
         }
-        else if (employee_position == "Cashier")
+        else if (employee_position == "Cashier"||employee_position =="cashier")
         {
             basic_salary = 1790;
             employee_type = "fulltime";
+            break;
         }
-        else if (employee_position == "Cleaner")
+        else if (employee_position == "Cleaner"||employee_position =="cleaner")
         {
             basic_salary = 1400;
             employee_type = "parttime";
+            break;
         }
-        else if (employee_position == "Kitchen Staff")
+        else if (employee_position == "Kitchen Staff"||employee_position =="kitchen staff")
         {
             basic_salary = 1850;
             employee_type = "parttime";
+            break;
         }
-        else if (employee_position == "Waiter" || employee_position == "Waitress")
+        else if (employee_position == "Waiter" ||employee_position == "waiter"|| employee_position == "Waitress"||employee_position == "waitress")
         {
             basic_salary = 1700;
             employee_type = "parttime";
+            break;
         }
-        else if (employee_position == "Supervisor")
+        else if (employee_position == "Supervisor"||employee_position == "supervisor")
         {
             basic_salary = 2400;
             employee_type = "fulltime";
+            break;
         }
         else
         {
-            cout << "Invalid Employee Position" << endl;
-            basic_salary = 0; // Reset salary to 0 for invalid position
+            cout << "Invalid Employee Position. Please try again." << endl;
         }
     }
+
+    cout << "Enter Employee Start Date (dd/mm/yy): ";
+    cin >> start_date;
+}
 
     void getData()
     {
@@ -112,6 +123,8 @@ public:
         cin >> leave_days;
         cout << "Enter overtime hours: ";
         cin >> overtime_hours;
+
+        // Calculate bonus based on leave days
         if (leave_days == 0)
         {
             bonus = 300;
@@ -128,27 +141,36 @@ public:
         {
             bonus = 0;
         }
+
+        // Explicitly calculate total salary to update dependent fields
+        calculateFulltimeTotalSalary();
     }
 
     // Calculate total salary
     double calculateFulltimeTotalSalary()
     {
-        int salary = getBasicSalary();
+        double salary = getBasicSalary();
+
+        // Calculate overtime fees
         overtime_fees = (((salary / 30) / 8) * overtime_hours) * 2;
+
+        // Calculate tax on salary
         tax_salary = (salary / 100) * 2;
 
+        // Calculate total amount considering leave days and overtime
         if (leave_days < 4 && overtime_hours >= 0)
         {
-            total_amount = salary + (bonus + overtime_fees);
+            total_amount = salary + bonus + overtime_fees;
         }
         else if (leave_days > 4 && overtime_hours > 0)
         {
-            total_amount = salary - (bonus + overtime_fees) - (salary / 100) * 1;
+            total_amount = salary - ((salary / 100) * 1) + overtime_fees - bonus;
         }
         else
         {
-            total_amount = salary - (bonus + overtime_fees);
+            total_amount = salary - bonus - overtime_fees;
         }
+
         return total_amount;
     }
 
@@ -157,16 +179,27 @@ public:
         if (total_amount == 0) // Ensure total_amount is calculated
             calculateFulltimeTotalSalary();
 
+        // Calculate net salary after deductions
         net_salary = total_amount - ((total_amount / 100) * 2) - security_tax;
         return net_salary;
     }
 
     void getFullTimeData()
     {
+        // Ensure all calculations are up-to-date
+        calculateFulltimeTotalSalary();
+        calculateFulltimeTotalNetSalary();
+
+        // Display all details
         getData();
         cout << left << setw(20) << "Leave Days" << ": " << setw(20) << leave_days << endl;
-        cout << left << setw(20) << "Overtime Hours" << ": " << setw(20) << overtime_hours << endl;
-        cout << left << setw(20) << "Total Net Amount" << ": " << setw(20) << fixed << setprecision(2) << calculateFulltimeTotalNetSalary() << endl;
+        cout << left << setw(20) << "Overtime Hours" << ": " << setw(20) << fixed << setprecision(2) << overtime_hours << endl;
+        cout << left << setw(20) << "Overtime Fees" << ": $" << setw(20) << fixed << setprecision(2) << overtime_fees << endl;
+        cout << left << setw(20) << "Bonus" << ": $" << setw(20) << fixed << setprecision(2) << bonus << endl;
+        cout << left << setw(20) << "Tax Deduction" << ": $" << setw(20) << fixed << setprecision(2) << tax_salary << endl;
+        cout << left << setw(20) << "Security Deduction" << ": $" << setw(20) << security_tax << endl;
+        cout << left << setw(20) << "Total Amount" << ": $" << setw(20) << fixed << setprecision(2) << total_amount << endl;
+        cout << left << setw(20) << "Total Net Amount" << ": $" << setw(20) << fixed << setprecision(2) << net_salary << endl;
         cout << endl;
     }
 };
@@ -177,6 +210,8 @@ private:
     double hourly_wage = 0;
     double working_hours = 0;
     double total_amount = 0;
+    double tax_deduction = 0;
+    double net_salary = 0;
 
 public:
     PartTime() : working_hours(0) {}
@@ -186,6 +221,9 @@ public:
         setData(); // Set common data from Employee
         cout << "Enter working hours (Monthly): ";
         cin >> working_hours;
+
+        // Calculate salary components after setting data
+        calculateParttimeTotalNetSalary();
     }
 
     double calculateParttimeTotalNetSalary()
@@ -194,22 +232,35 @@ public:
         double salary = getBasicSalary();
         hourly_wage = (salary / 30) / 8;
 
-        // Calculate total amount
-        total_amount = (hourly_wage * working_hours); // Total salary based on working hours
-        total_amount -= (total_amount / 100) * 2;     // Deduct 2% income tax
-        total_amount -= security_tax;                 // Deduct fixed security tax
+        // Calculate gross total amount based on working hours
+        total_amount = hourly_wage * working_hours;
 
-        return total_amount;
+        // Calculate tax deduction (2% of total amount)
+        tax_deduction = (total_amount / 100) * 2;
+
+        // Calculate net salary after tax and security deduction
+        net_salary = total_amount - tax_deduction - security_tax;
+
+        return net_salary;
     }
 
     void getParttimeData()
     {
+        // Ensure calculations are updated
+        calculateParttimeTotalNetSalary();
+
+        // Display part-time employee data
         getData();
-        cout << left << setw(20) << "Working Hours" << ": " << setw(20) << working_hours << endl;
-        cout << left << setw(20) << "Total Net Amount" << ": " << setw(20) << fixed << setprecision(2) << calculateParttimeTotalNetSalary() << endl;
+        cout << left << setw(20) << "Working Hours" << ": " << setw(20) << fixed << setprecision(2) << working_hours << endl;
+        cout << left << setw(20) << "Hourly Wage" << ": $" << setw(20) << fixed << setprecision(2) << hourly_wage << endl;
+        cout << left << setw(20) << "Total Amount" << ": $" << setw(20) << fixed << setprecision(2) << total_amount << endl;
+        cout << left << setw(20) << "Tax Deduction" << ": $" << setw(20) << fixed << setprecision(2) << tax_deduction << endl;
+        cout << left << setw(20) << "Security Deduction" << ": $" << setw(20) << security_tax << endl;
+        cout << left << setw(20) << "Total Net Amount" << ": $" << setw(20) << fixed << setprecision(2) << net_salary << endl;
         cout << endl;
     }
 };
+
 
 vector<FullTime> Fulltime_Employees;
 vector<PartTime> PartTime_Employees;
