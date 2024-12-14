@@ -168,7 +168,7 @@ public:
         }
         else
         {
-            total_amount = salary - bonus - overtime_fees;
+            total_amount = salary - bonus + overtime_fees;
         }
 
         return total_amount;
