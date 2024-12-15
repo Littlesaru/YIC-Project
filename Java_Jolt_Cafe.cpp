@@ -30,65 +30,65 @@ public:
     Employee() : employee_ID(0), employee_name(""), employee_position(""), employee_type(""), start_date(""), basic_salary(0) {}
 
     // Set employee data
-void setData()
-{
-    cout << "Enter Employee ID: ";
-    cin >> employee_ID;
-    cin.ignore(); // Clear input buffer
-    cout << "Enter Employee Name: ";
-    getline(cin, employee_name);
-
-    // Loop until a valid employee position is entered
-    while (true)
+    void setData()
     {
-        cout << "Enter Employee Position (Fulltime- Barista, Cashier, Supervisor (or) Part-time- Cleaner, Kitchen Staff, Waiter, Waitress): ";
-        getline(cin, employee_position);
+        cout << "Enter Employee ID: ";
+        cin >> employee_ID;
+        cin.ignore(); // Clear input buffer
+        cout << "Enter Employee Name: ";
+        getline(cin, employee_name);
 
-        if (employee_position == "Barista"||employee_position =="barista")
+        // Loop until a valid employee position is entered
+        while (true)
         {
-            basic_salary = 1920;
-            employee_type = "fulltime";
-            break;
+            cout << "Enter Employee Position (Fulltime- Barista, Cashier, Supervisor (or) Part-time- Cleaner, Kitchen Staff, Waiter, Waitress): ";
+            getline(cin, employee_position);
+
+            if (employee_position == "Barista" || employee_position == "barista")
+            {
+                basic_salary = 1920;
+                employee_type = "fulltime";
+                break;
+            }
+            else if (employee_position == "Cashier" || employee_position == "cashier")
+            {
+                basic_salary = 1790;
+                employee_type = "fulltime";
+                break;
+            }
+            else if (employee_position == "Cleaner" || employee_position == "cleaner")
+            {
+                basic_salary = 1400;
+                employee_type = "parttime";
+                break;
+            }
+            else if (employee_position == "Kitchen Staff" || employee_position == "kitchen staff")
+            {
+                basic_salary = 1850;
+                employee_type = "parttime";
+                break;
+            }
+            else if (employee_position == "Waiter" || employee_position == "waiter" || employee_position == "Waitress" || employee_position == "waitress")
+            {
+                basic_salary = 1700;
+                employee_type = "parttime";
+                break;
+            }
+            else if (employee_position == "Supervisor" || employee_position == "supervisor")
+            {
+                basic_salary = 2400;
+                employee_type = "fulltime";
+                break;
+            }
+            else
+            {
+                cout << "Invalid Employee Position. Please try again." << endl;
+            }
         }
-        else if (employee_position == "Cashier"||employee_position =="cashier")
-        {
-            basic_salary = 1790;
-            employee_type = "fulltime";
-            break;
-        }
-        else if (employee_position == "Cleaner"||employee_position =="cleaner")
-        {
-            basic_salary = 1400;
-            employee_type = "parttime";
-            break;
-        }
-        else if (employee_position == "Kitchen Staff"||employee_position =="kitchen staff")
-        {
-            basic_salary = 1850;
-            employee_type = "parttime";
-            break;
-        }
-        else if (employee_position == "Waiter" ||employee_position == "waiter"|| employee_position == "Waitress"||employee_position == "waitress")
-        {
-            basic_salary = 1700;
-            employee_type = "parttime";
-            break;
-        }
-        else if (employee_position == "Supervisor"||employee_position == "supervisor")
-        {
-            basic_salary = 2400;
-            employee_type = "fulltime";
-            break;
-        }
-        else
-        {
-            cout << "Invalid Employee Position. Please try again." << endl;
-        }
+
+        cout << "Enter Employee Start Date (dd/mm/yy): ";
+        cin >> start_date;
     }
-
-    cout << "Enter Employee Start Date (dd/mm/yy): ";
-    cin >> start_date;
-}
 
     void getData()
     {
@@ -152,23 +152,26 @@ public:
         double salary = getBasicSalary();
 
         // Calculate overtime fees
-        overtime_fees = (((salary / 30) / 8) * overtime_hours) * 2;
-
-        // Calculate tax on salary
-        tax_salary = (salary / 100) * 2;
+        overtime_fees = (((salary / 30) / 8) * overtime_hours) * 2;        
 
         // Calculate total amount considering leave days and overtime
         if (leave_days < 4 && overtime_hours >= 0)
         {
             total_amount = salary + bonus + overtime_fees;
+            // Calculate tax on salary
+            tax_salary = (total_amount / 100) * 2;
         }
         else if (leave_days > 4 && overtime_hours > 0)
         {
             total_amount = salary - ((salary / 100) * 1) + overtime_fees - bonus;
+            // Calculate tax on salary
+            tax_salary = (total_amount / 100) * 2;
         }
         else
         {
             total_amount = salary - bonus + overtime_fees;
+            // Calculate tax on salary
+            tax_salary = (total_amount / 100) * 2;
         }
 
         return total_amount;
@@ -261,7 +264,6 @@ public:
     }
 };
 
-
 vector<FullTime> Fulltime_Employees;
 vector<PartTime> PartTime_Employees;
 
@@ -272,7 +274,7 @@ int main()
     cout << "*---___ Java_Jolt_Cafe Manager __---*" << endl;
     cout << "--------------------------------------------" << endl;
 
-    while (opt!=6)
+    while (opt != 6)
     {
         cout << "\nMenu" << endl;
         cout << "1. Insert Employee Data \n"
@@ -304,14 +306,14 @@ int main()
                 {
                     FullTime New_Employee;
                     New_Employee.setFullTimeData();
-                    cout<<endl;
+                    cout << endl;
                     Fulltime_Employees.push_back(New_Employee);
                 }
                 else if (employee_type == "parttime")
                 {
                     PartTime New_Employee;
                     New_Employee.setParttimeData();
-                    cout<<endl;
+                    cout << endl;
                     PartTime_Employees.push_back(New_Employee);
                 }
                 else
