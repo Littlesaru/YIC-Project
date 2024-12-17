@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <vector>
 #include <algorithm>
+#include <limits> // For numeric_limits
 using namespace std;
 
 // Global variable
@@ -18,6 +19,9 @@ private:
     double basic_salary;
 
 public:
+    // Virtual destructor for polymorphism
+    virtual ~Employee() {}
+
     // Getter methods
     int getEmployeeID() { return employee_ID; }
     string getName() { return employee_name; }
@@ -152,7 +156,7 @@ public:
         double salary = getBasicSalary();
 
         // Calculate overtime fees
-        overtime_fees = (((salary / 30) / 8) * overtime_hours) * 2;        
+        overtime_fees = (((salary / 30) / 8) * overtime_hours) * 2;
 
         // Calculate total amount considering leave days and overtime
         if (leave_days < 4 && overtime_hours >= 0)
@@ -264,12 +268,13 @@ public:
     }
 };
 
+// Global vectors to store employees
 vector<FullTime> Fulltime_Employees;
 vector<PartTime> PartTime_Employees;
 
 int main()
 {
-    int opt;
+    int opt = 0; // Initialize opt to avoid undefined behavior
     cout << "--------------------------------------------" << endl;
     cout << "*---___ Java_Jolt_Cafe Manager __---*" << endl;
     cout << "--------------------------------------------" << endl;
@@ -281,16 +286,27 @@ int main()
              << "2. Update Employee Data \n"
              << "3. View Fulltime Employees Salary \n"
              << "4. View Parttime Employees Salary \n"
-             << "5. View All Employees Salary \n"
+             << "5. View All Employees Salary (Sorted by Net Salary) \n"
              << "6. Exit" << endl;
+        cout << "Choose an option: ";
         cin >> opt;
-        cin.ignore();
+
+        // Clear invalid input
+        if (cin.fail())
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid input! Please enter a number between 1 and 6." << endl;
+            continue;
+        }
+
+        cin.ignore(); // Clear input buffer
 
         switch (opt)
         {
         case 1:
         {
-            int n = 0;
+            int n;
             cout << "Enter the number of employees you want to insert: ";
             cin >> n;
             cin.ignore(); // Clear input buffer
@@ -301,6 +317,7 @@ int main()
                 string employee_type;
                 cout << "Which Type Of Employee Data You Want To Insert (fulltime/parttime): ";
                 cin >> employee_type;
+                cin.ignore(); // Clear buffer after reading employee_type
 
                 if (employee_type == "fulltime")
                 {
@@ -414,19 +431,74 @@ int main()
         }
         case 5:
         {
-            cout << "Full-Time Employees:" << endl;
+            //Adding algorithm with vector
+            struct EmployeeInfo
+            {
+                string type;                 // "FullTime" or "PartTime"
+                double net_salary;           // Net salary for sorting
+                int employee_id;             // Employee ID
+                string employee_name;        // Employee Name
+                Employee *employee_instance; // Pointer to original object
+            };
+
+            vector<EmployeeInfo> all_employees;
+
+            // Collect full-time employees
             for (int i = 0; i < Fulltime_Employees.size(); i++)
             {
-                Fulltime_Employees[i].getFullTimeData();
+                EmployeeInfo info;
+                info.type = "FullTime";
+                info.net_salary = Fulltime_Employees[i].calculateFulltimeTotalNetSalary();
+                info.employee_id = Fulltime_Employees[i].getEmployeeID();
+                info.employee_name = Fulltime_Employees[i].getName();
+                info.employee_instance = &Fulltime_Employees[i];
+                all_employees.push_back(info);
             }
-            cout << "Part-Time Employees:" << endl;
+
+            // Collect part-time employees
             for (int i = 0; i < PartTime_Employees.size(); i++)
             {
-                PartTime_Employees[i].getParttimeData();
+                EmployeeInfo info;
+                info.type = "PartTime";
+                info.net_salary = PartTime_Employees[i].calculateParttimeTotalNetSalary();
+                info.employee_id = PartTime_Employees[i].getEmployeeID();
+                info.employee_name = PartTime_Employees[i].getName();
+                info.employee_instance = &PartTime_Employees[i];
+                all_employees.push_back(info);
+            }
+
+            // Sort all employees by net salary in descending order
+            sort(all_employees.begin(), all_employees.end(), [](EmployeeInfo &a, EmployeeInfo &b)
+                 { return a.net_salary > b.net_salary; });
+
+            // Display sorted employees
+            if (all_employees.empty())
+            {
+                cout << "No employees found to display!" << endl;
+                break;
+            }
+
+            cout << "\nEmployees Sorted by Total Net Salary (High to Low):" << endl;
+            for (int i = 0; i < all_employees.size(); i++)
+            {
+                cout << "--------------------------------------------" << endl;
+                cout << "NO " << i + 1 << " "<<endl;
+                cout << "----------------------------"<< endl;
+
+                // Display full details for the employee
+                if (all_employees[i].type == "FullTime")
+                {
+                    dynamic_cast<FullTime *>(all_employees[i].employee_instance)->getFullTimeData();
+                }
+                else if (all_employees[i].type == "PartTime")
+                {
+                    dynamic_cast<PartTime *>(all_employees[i].employee_instance)->getParttimeData();
+                }
             }
             break;
         }
         case 6:
+            cout << "Exiting program. Goodbye!" << endl;
             return 0;
         default:
             cout << "Invalid option, please try again." << endl;
