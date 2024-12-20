@@ -93,17 +93,6 @@ public:
         cout << "Enter Employee Start Date (dd/mm/yy): ";
         cin >> start_date;
     }
-
-    // void getData()
-    // {
-    //     // Set width and alignment for the table
-    //     cout << left << setw(20) << "ID" << ": " << setw(20) << employee_ID << endl;
-    //     cout << left << setw(20) << "Name" << ": " << setw(20) << employee_name << endl;
-    //     cout << left << setw(20) << "Position" << ": " << setw(20) << employee_position << endl;
-    //     cout << left << setw(20) << "Type" << ": " << setw(20) << employee_type << endl;
-    //     cout << left << setw(20) << "Start Date" << ": " << setw(20) << start_date << endl;
-    //     cout << left << setw(20) << "Basic Salary" << ": " << setw(20) << fixed << setprecision(2) << basic_salary << endl;
-    // }
 };
 
 class FullTime : public Employee
@@ -191,36 +180,6 @@ public:
         return net_salary;
     }
 
-    // void getFullTimeData()
-    // {
-    //     calculateFulltimeTotalSalary();
-    //     calculateFulltimeTotalNetSalary();
-
-    //     cout << "***** ( Full-Time Employees ) *****" << endl;
-
-    //     // Table Headers
-    //     cout << left << setw(10) << "ID"
-    //          << setw(10) << "Name"
-    //          << setw(15) << "Position"
-    //          << setw(12) << "Start Date"
-    //          << setw(15) << "Basic Salary"
-    //          << setw(12) << "Leave Days"
-    //          << setw(12) << "Bonus"
-    //          << setw(12) << "Net Salary" << endl;
-
-    //     // Table Data
-    //     cout << left << setw(10) << getEmployeeID()
-    //          << setw(10) << getName()
-    //          << setw(15) << getPosition()
-    //          << setw(12) << getStartDate()
-    //          << setw(15) << fixed << setprecision(2) << getBasicSalary()
-    //          << setw(12) << leave_days
-    //          << setw(12) << fixed << setprecision(3) << bonus
-    //          << setw(12) << fixed << setprecision(2) << net_salary << endl;
-
-    //     cout << "***********************************" << endl;
-    // }
-
     // setter
     double getOvertimeHours() { return overtime_hours; }
     double getOvertimeFees() { return overtime_fees; }
@@ -271,23 +230,6 @@ public:
         return net_salary;
     }
 
-    // void getParttimeData()
-    // {
-    //     // Ensure calculations are updated
-    //     calculateParttimeTotalNetSalary();
-    //     cout << "***** ( Part-Time Employees ) *****" << endl;
-    //     // Display part-time employee data
-    //     getData();
-    //     cout << left << setw(20) << "Working Hours" << ": " << working_hours << endl;
-    //     cout << left << setw(20) << "Hourly Wage" << ": $" << hourly_wage << endl;
-    //     cout << left << setw(20) << "Total Amount" << ": $" << total_amount << endl;
-    //     cout << left << setw(20) << "Tax Deduction" << ": $" << tax_deduction << endl;
-    //     cout << left << setw(20) << "Security Deduction" << ": $" << security_tax << endl;
-    //     cout << left << setw(20) << "Total Net Amount" << ": $" << net_salary << endl;
-    //     cout << "***********************************\n"
-    //          << endl;
-    // }
-
     // New getters for detailed data
     double getWorkingHours() { return working_hours; }
     double getHourlyWage() { return hourly_wage; }
@@ -308,7 +250,7 @@ int main()
     cout << "--------------------------------------------" << endl;
     int fulltime_employee = 0, parttime_employee = 0;
     double fulltime_employee_salary = 0, parttime_employee_salary = 0;
-    while (opt != 7)
+    while (opt != 6)
     {
         cout << "\nMenu" << endl;
         cout << "1. Insert Employee Data \n"
@@ -316,8 +258,7 @@ int main()
              << "3. View Fulltime Employees Salary \n"
              << "4. View Parttime Employees Salary \n"
              << "5. View All Employees Salary (Sorted by Net Salary) \n"
-             << "6. Montly Report \n"
-             << "7. Exit" << endl;
+             << "6. Exit" << endl;
         cout << "Choose an option: ";
         cin >> opt;
 
@@ -339,7 +280,7 @@ int main()
             int n;
             cout << "Enter the number of employees you want to insert: ";
             cin >> n;
-            cin.ignore(); // Clear input buffer
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
             for (int i = 0; i < n; i++)
             {
@@ -356,7 +297,7 @@ int main()
                     cout << endl;
                     Fulltime_Employees.push_back(New_Employee);
                     fulltime_employee++;
-                    fulltime_employee_salary += Fulltime_Employees[i].calculateFulltimeTotalNetSalary();
+                    fulltime_employee_salary += Fulltime_Employees.back().calculateFulltimeTotalNetSalary();
                 }
                 else if (employee_type == "parttime")
                 {
@@ -365,7 +306,7 @@ int main()
                     cout << endl;
                     PartTime_Employees.push_back(New_Employee);
                     parttime_employee++;
-                    parttime_employee_salary += PartTime_Employees[i].calculateParttimeTotalNetSalary();
+                    parttime_employee_salary += PartTime_Employees.back().calculateParttimeTotalNetSalary();
                 }
                 else
                 {
@@ -628,10 +569,6 @@ int main()
             }
 
             cout << "***************************************************************" << endl;
-            break;
-        }
-        case 6:
-        {
             cout << " Monthly Fulltime Salary Cost " << endl;
             cout << "------------------------------------" << endl;
             cout << " Total Fulltime Employee : " << fulltime_employee << endl;
@@ -643,7 +580,7 @@ int main()
             cout << " Total Parrttime Monthly Salary Cost : " << parttime_employee_salary << endl;
             break;
         }
-        case 7:
+        case 6:
             cout << "Exiting program. Goodbye!" << endl;
             return 0;
         default:
