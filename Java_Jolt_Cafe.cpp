@@ -249,7 +249,7 @@ int main()
     cout << "*---___ Java_Jolt_Cafe Manager __---*" << endl;
     cout << "--------------------------------------------" << endl;
     int fulltime_employee = 0, parttime_employee = 0;
-    double fulltime_employee_salary = 0, parttime_employee_salary = 0;
+    double fulltime_employee_salary = 0, parttime_employee_salary = 0, monthly_total = 0;
     while (opt != 6)
     {
         cout << "\nMenu" << endl;
@@ -297,7 +297,7 @@ int main()
                     cout << endl;
                     Fulltime_Employees.push_back(New_Employee);
                     fulltime_employee++;
-                    fulltime_employee_salary += Fulltime_Employees.back().calculateFulltimeTotalNetSalary();
+                    fulltime_employee_salary += New_Employee.calculateFulltimeTotalNetSalary();
                 }
                 else if (employee_type == "parttime")
                 {
@@ -306,15 +306,19 @@ int main()
                     cout << endl;
                     PartTime_Employees.push_back(New_Employee);
                     parttime_employee++;
-                    parttime_employee_salary += PartTime_Employees.back().calculateParttimeTotalNetSalary();
+                    parttime_employee_salary += New_Employee.calculateParttimeTotalNetSalary();
                 }
                 else
                 {
                     cout << "Invalid Employee Type!!!!" << endl;
                 }
             }
+
+            monthly_total = fulltime_employee_salary + parttime_employee_salary;
+            cout << "!!Employee Data Add Successful!!" << endl;
             break;
         }
+
         case 2:
         {
             int num;
@@ -578,6 +582,9 @@ int main()
             cout << "-------------------------------------" << endl;
             cout << " Total Parttime Employee : " << parttime_employee << endl;
             cout << " Total Parrttime Monthly Salary Cost : " << parttime_employee_salary << endl;
+            cout << "***************************************************************" << endl;
+            cout << "Total Monthly Salary of All Employee : " << monthly_total << endl;
+            cout << "***************************************************************" << endl;
             break;
         }
         case 6:
