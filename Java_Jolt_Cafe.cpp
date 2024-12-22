@@ -435,7 +435,6 @@ int main()
             else
             {
                 cout << "***** ( Part-Time Employees ) *****" << endl;
-
                 // Table Header
                 cout << left << setw(10) << "ID"
                      << setw(10) << "Name"
